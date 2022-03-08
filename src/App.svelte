@@ -8,6 +8,11 @@
     csvHolidays.push({ name: "", date: "" });
     holidays = csvHolidays;
   };
+  const addRowToHolidays = () => {
+    const oldHolidays = holidays;
+    oldHolidays.push({ name: "", date: "" });
+    holidays = oldHolidays;
+  };
   const convertDateToTimestamp = (date, index) => {
     const timeStampRegex = new RegExp(/([0-9]{4}-[0-9]{2}-[0-9]{2})/);
     let timestamp;
@@ -61,6 +66,9 @@
       </div>
       <div>
         <input type="text" bind:value={holiday.name} placeholder="Name" />
+      </div>
+      <div>
+        <button on:click={addRowToHolidays}>+</button>
       </div>
     </div>
   {/each}
