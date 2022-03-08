@@ -28,11 +28,12 @@
     link.click();
   };
   const removeHoliday = (index) => {
-    if (holidays.length > 1) {
-      const oldHolidays = holidays;
-      oldHolidays.splice(index, 1);
-      holidays = oldHolidays;
+    const oldHolidays = holidays;
+    oldHolidays.splice(index, 1);
+    if (!oldHolidays.length) {
+      oldHolidays.push({ name: "", date: "" });
     }
+    holidays = oldHolidays;
   };
   const parseHolidaysFromExistingCSV = async (e) => {
     const csvHolidays = [];
