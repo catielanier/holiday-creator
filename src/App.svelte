@@ -27,6 +27,13 @@
     document.body.appendChild(link);
     link.click();
   };
+  const removeHoliday = (index) => {
+    if (holidays.length > 1) {
+      const oldHolidays = holidays;
+      oldHolidays.splice(index, 1);
+      holidays = oldHolidays;
+    }
+  };
   const parseHolidaysFromExistingCSV = async (e) => {
     const csvHolidays = [];
     const { files } = e.target || e.dataTransfer;
