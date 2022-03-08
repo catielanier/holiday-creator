@@ -20,5 +20,15 @@
   "dependencies": {
     "luxon": "^2.3.1",
     "sirv-cli": "^2.0.0"
+  },
+  "now": {
+    "alias": "icad-holidays",
+    "name": "icad-holidays",
+    "routes": [
+      {
+        "src": "/",
+        "dest": "index.html"
+      }
+    ]
   }
 }
