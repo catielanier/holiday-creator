@@ -64,10 +64,10 @@
             csvHolidays.push(newHoliday);
           }
         });
-        csvHolidays.push({ name: "", date: "" });
         csvHolidays.sort((x, y) => {
           return x.date.localeCompare(y.date);
         });
+        csvHolidays.push({ name: "", date: "" });
         holidays = csvHolidays;
       })
       .catch((err) => {
@@ -143,18 +143,15 @@
             class="holiday-name-input"
           />
         </div>
-        <div class="button-container">
-          <div>
-            <button class="control minus" on:click={() => removeHoliday(index)}
-              >-</button
-            >
-          </div>
-          <div>
-            {#if index === holidays.length - 1}
-              <button class="control plus" on:click={addRowToHolidays}>+</button
-              >
-            {/if}
-          </div>
+        <div>
+          <button class="control minus" on:click={() => removeHoliday(index)}
+            >-</button
+          >
+        </div>
+        <div>
+          {#if index === holidays.length - 1}
+            <button class="control plus" on:click={addRowToHolidays}>+</button>
+          {/if}
         </div>
       </div>
     </div>
@@ -186,6 +183,11 @@
   .holiday-name-input {
     width: 70%;
   }
+  .name-and-controls {
+    display: grid;
+    grid-template-columns: 11fr 1fr 1fr;
+    grid-gap: 10px;
+  }
 
   .holiday-table {
     max-width: 540px;
@@ -210,7 +212,9 @@
 
   button {
     border: 0;
-    border-radius: 10px;
+    border-radius: 5px;
+    background: #fcaa67;
+    color: #f7f7ff;
   }
 
   .control {
