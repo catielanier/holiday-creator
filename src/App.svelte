@@ -120,8 +120,12 @@
     multiple="false"
     accept=".csv"
   />
+  <div class="holiday-table table-header">
+    <div>Date</div>
+    <div>Holiday Name</div>
+  </div>
   {#each holidays as holiday, index}
-    <div>
+    <div class="holiday-table">
       <div>
         <input
           type="text"
@@ -130,14 +134,31 @@
           placeholder="Date"
         />
       </div>
-      <div>
-        <input type="text" bind:value={holiday.name} placeholder="Name" />
+      <div class="name-and-controls">
+        <div>
+          <input
+            type="text"
+            bind:value={holiday.name}
+            placeholder="Name"
+            class="holiday-name-input"
+          />
+        </div>
+        <div class="button-container">
+          <div>
+            <button class="control minus" on:click={() => removeHoliday(index)}
+              >-</button
+            >
+          </div>
+          <div>
+            {#if index === holidays.length - 1}
+              <button class="control plus" on:click={addRowToHolidays}>+</button
+              >
+            {/if}
+          </div>
+        </div>
       </div>
     </div>
   {/each}
-  <div>
-    <button on:click={addRowToHolidays}>+</button>
-  </div>
   <button on:click={generateHolidayCSV}>Generate CSV</button>
 </main>
 
@@ -147,13 +168,67 @@
     padding: 1em;
     max-width: 240px;
     margin: 0 auto;
+    background: #473335;
+    color: #f7f7ff;
   }
 
   h1 {
-    color: #ff3e00;
+    color: #fcaa67;
     text-transform: uppercase;
     font-size: 4em;
     font-weight: 100;
+  }
+
+  .holiday-table.table-header {
+    margin-top: 15px;
+  }
+
+  .holiday-name-input {
+    width: 70%;
+  }
+
+  .holiday-table {
+    max-width: 540px;
+    width: 100%;
+    margin: 0 auto;
+    margin-bottom: 15px;
+    display: grid;
+    grid-template-columns: 30% 70%;
+    grid-gap: 15px;
+  }
+  .holiday-table div {
+    text-align: left;
+  }
+
+  .holiday-table input {
+    width: 100%;
+  }
+
+  .table-header {
+    font-weight: bold;
+  }
+
+  button {
+    border: 0;
+    border-radius: 10px;
+  }
+
+  .control {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    font-weight: bold;
+    padding: 2.5px;
+  }
+
+  .plus {
+    background: #3f826d;
+    color: #f7f7ff;
+  }
+
+  .minus {
+    background: #e3170a;
+    color: #f7f7ff;
   }
 
   @media (min-width: 640px) {
