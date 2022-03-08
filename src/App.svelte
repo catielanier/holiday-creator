@@ -2,8 +2,14 @@
   import { DateTime } from "luxon";
   let holidays = [{ name: "", date: "" }];
   const generateHolidayCSV = () => {
-    if (holidays[length - 1].name === "" && holidays[length - 1].date === "")
+    if (
+      holidays[holidays.length - 1].name === "" &&
+      holidays[holidays.length - 1].date === ""
+    )
       holidays.pop();
+    holidays.sort((x, y) => {
+      return x.date.localeCompare(y.date);
+    });
     const csv = [["Date", "Reason"]];
     const filename = `Holiday Calendar - ${DateTime.now().toFormat(
       "MMM d, yyyy"
@@ -17,7 +23,7 @@
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `${fileName}.csv`);
+    link.setAttribute("download", `${filename}.csv`);
     document.body.appendChild(link);
     link.click();
   };
@@ -52,6 +58,9 @@
           }
         });
         csvHolidays.push({ name: "", date: "" });
+        csvHolidays.sort((x, y) => {
+          return x.date.localeCompare(y.date);
+        });
         holidays = csvHolidays;
       })
       .catch((err) => {
