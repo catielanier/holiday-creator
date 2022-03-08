@@ -1,7 +1,26 @@
 <script>
   import { DateTime } from "luxon";
   let holidays = [{ name: "", date: "" }];
-  const generateHolidayCSV = () => {};
+  const generateHolidayCSV = () => {
+    if (holidays[length - 1].name === "" && holidays[length - 1].date === "")
+      holidays.pop();
+    const csv = [["Date", "Reason"]];
+    const filename = `Holiday Calendar - ${DateTime.now().toFormat(
+      "MMM d, yyyy"
+    )}`;
+    holidays.forEach((holiday) => {
+      const row = [holiday.date, holiday.name];
+      csv.push(row);
+    });
+    let csvContent =
+      "data:text/csv;charset=utf-8," + csv.map((e) => e.join(",")).join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `${fileName}.csv`);
+    document.body.appendChild(link);
+    link.click();
+  };
   const parseHolidaysFromExistingCSV = async (e) => {
     const csvHolidays = [];
     const { files } = e.target || e.dataTransfer;
