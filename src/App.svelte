@@ -2,11 +2,42 @@
   import { DateTime } from "luxon";
   let holidays = [{ name: "", date: "" }];
   const generateHolidayCSV = () => {};
-  const parseHolidaysFromExistingCSV = () => {
+  const parseHolidaysFromExistingCSV = async (e) => {
     const csvHolidays = [];
-    // do shit
-    csvHolidays.push({ name: "", date: "" });
-    holidays = csvHolidays;
+    const { files } = e.target || e.dataTransfer;
+    const file = await files[0];
+    const reader = new FileReader();
+    let csvData;
+    const promise = new Promise((resolve, reject) => {
+      reader.onload = async (e) => {
+        resolve((csvData = reader.result));
+      };
+      reader.readAsText(file);
+    });
+    promise
+      .then((res) => {
+        const lines = csvData.split(/\r\n|\n/);
+        lines.pop();
+        const arr = [];
+        lines.forEach((line) => {
+          const arr2 = line.split(",");
+          arr.push(arr2);
+        });
+        arr.forEach((line, index) => {
+          if (index > 0) {
+            const newHoliday = {
+              date: line[0],
+              name: line[1],
+            };
+            csvHolidays.push(newHoliday);
+          }
+        });
+        csvHolidays.push({ name: "", date: "" });
+        holidays = csvHolidays;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
   const addRowToHolidays = () => {
     const oldHolidays = holidays;
@@ -67,11 +98,11 @@
       <div>
         <input type="text" bind:value={holiday.name} placeholder="Name" />
       </div>
-      <div>
-        <button on:click={addRowToHolidays}>+</button>
-      </div>
     </div>
   {/each}
+  <div>
+    <button on:click={addRowToHolidays}>+</button>
+  </div>
   <button on:click={generateHolidayCSV}>Generate CSV</button>
 </main>
 
