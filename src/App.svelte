@@ -15,7 +15,10 @@
       "MMM d, yyyy"
     )}`;
     holidays.forEach((holiday) => {
-      const row = [holiday.date, holiday.name];
+      const row = [
+        holiday.date,
+        holiday.name.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""),
+      ];
       csv.push(row);
     });
     let csvContent =
