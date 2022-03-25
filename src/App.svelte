@@ -94,6 +94,9 @@
       const monthDayYearSpelledRegex = new RegExp(
         /([A-Za-z]*.{0,1} [0-9]{1,2},{0,1} [0-9]{2,4})/
       );
+      const dayMonthYearSpelledRegex = new RegExp(
+        /[0-9]{1,2} ([A-Za-z]*.{0,1},{0,1} [0-9]{2,4})/
+      );
       const isSlashDate = monthDayYearSlashRegex.test(date);
       if (isSlashDate) {
         const twoDigitYearRegex = new RegExp(
@@ -106,38 +109,84 @@
           timestamp = DateTime.fromFormat(date, "M/d/yyyy").toISODate();
         }
       }
-      const isWordDate = monthDayYearSpelledRegex.test(date);
+      const isWordDate =
+        monthDayYearSpelledRegex.test(date) ||
+        dayMonthYearSpelledRegex.test(date);
       if (isWordDate) {
         const wordDate = date.replace(",", "").replace(".", "");
-        const medWordDateRegex = new RegExp(
-          /([A-Za-z]{3} [0-9]{1,2} [0-9]{2,4})/
-        );
-        const isMedWordDate = medWordDateRegex.test(wordDate);
-        const twoDigitYearRegex = new RegExp(/([A-Za-z]* [0-9]{1,2} [0-9]{2})/);
-        const isTwoDigitYear = twoDigitYearRegex.test(wordDate);
-        switch (isTwoDigitYear) {
-          case true:
-            if (isMedWordDate) {
-              timestamp = DateTime.fromFormat(wordDate, "MMM d yy").toISODate();
-            } else {
-              timestamp = DateTime.fromFormat(
-                wordDate,
-                "MMMM d yy"
-              ).toISODate();
-            }
-            break;
-          default:
-            if (isMedWordDate) {
-              timestamp = DateTime.fromFormat(
-                wordDate,
-                "MMM d yyyy"
-              ).toISODate();
-            } else {
-              timestamp = DateTime.fromFormat(
-                wordDate,
-                "MMMM d yyyy"
-              ).toISODate();
-            }
+        const isDayFirst = dayMonthYearSpelledRegex.test(date);
+        if (isDayFirst) {
+          const medWordDateRegex = new RegExp(
+            /([0-9]{1,2} [A-Za-z]{3} [0-9]{2,4})/
+          );
+          const isMedWordDate = medWordDateRegex.test(wordDate);
+          const twoDigitYearRegex = new RegExp(
+            /([0-9]{1,2} [A-Za-z]* [0-9]{2})/
+          );
+          const isTwoDigitYear = twoDigitYearRegex.test(wordDate);
+          switch (isTwoDigitYear) {
+            case true:
+              if (isMedWordDate) {
+                timestamp = DateTime.fromFormat(
+                  wordDate,
+                  "d MMM yy"
+                ).toISODate();
+              } else {
+                timestamp = DateTime.fromFormat(
+                  wordDate,
+                  "d MMMM yy"
+                ).toISODate();
+              }
+              break;
+            default:
+              if (isMedWordDate) {
+                timestamp = DateTime.fromFormat(
+                  wordDate,
+                  "d MMM yyyy"
+                ).toISODate();
+              } else {
+                timestamp = DateTime.fromFormat(
+                  wordDate,
+                  "d MMMM yyyy"
+                ).toISODate();
+              }
+          }
+        } else {
+          const medWordDateRegex = new RegExp(
+            /([A-Za-z]{3} [0-9]{1,2} [0-9]{2,4})/
+          );
+          const isMedWordDate = medWordDateRegex.test(wordDate);
+          const twoDigitYearRegex = new RegExp(
+            /([A-Za-z]* [0-9]{1,2} [0-9]{2})/
+          );
+          const isTwoDigitYear = twoDigitYearRegex.test(wordDate);
+          switch (isTwoDigitYear) {
+            case true:
+              if (isMedWordDate) {
+                timestamp = DateTime.fromFormat(
+                  wordDate,
+                  "MMM d yy"
+                ).toISODate();
+              } else {
+                timestamp = DateTime.fromFormat(
+                  wordDate,
+                  "MMMM d yy"
+                ).toISODate();
+              }
+              break;
+            default:
+              if (isMedWordDate) {
+                timestamp = DateTime.fromFormat(
+                  wordDate,
+                  "MMM d yyyy"
+                ).toISODate();
+              } else {
+                timestamp = DateTime.fromFormat(
+                  wordDate,
+                  "MMMM d yyyy"
+                ).toISODate();
+              }
+          }
         }
       }
       holidays[index].date = timestamp;
