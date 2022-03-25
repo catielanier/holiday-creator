@@ -109,10 +109,9 @@
         const medWordDateRegex = new RegExp(
           /([A-Za-z]{3} [0-9]{1,2} [0-9]{2,4})/
         );
-        const isMedWordDate = medWordDateRegex.test(date);
+        const isMedWordDate = medWordDateRegex.test(wordDate);
         const twoDigitYearRegex = new RegExp(/([A-Za-z]* [0-9]{1,2} [0-9]{2})/);
         const isTwoDigitYear = twoDigitYearRegex.test(wordDate);
-        console.log({ isTwoDigitYear, isMedWordDate });
         switch (isTwoDigitYear) {
           case true:
             if (isMedWordDate) {
@@ -130,7 +129,6 @@
                 wordDate,
                 "MMM d yyyy"
               ).toISODate();
-              console.log(timestamp);
             } else {
               timestamp = DateTime.fromFormat(
                 wordDate,
