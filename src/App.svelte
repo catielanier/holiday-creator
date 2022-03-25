@@ -10,7 +10,7 @@
     holidays.sort((x, y) => {
       return x.date.localeCompare(y.date);
     });
-    const csv = [["Date", "Reason"]];
+    const csv = [["date", "reason"]];
     const filename = `Holiday Calendar - ${DateTime.now().toFormat(
       "MMM d, yyyy"
     )}`;
@@ -86,25 +86,57 @@
     const isTimestamp = timeStampRegex.test(date);
     if (!isTimestamp) {
       const monthDayYearSlashRegex = new RegExp(
-        /([0-9]{2}\/[0-9]{2}\/[0-9]{4})/
+        /([0-9]{1,2}\/[0-9]{1,2}\/[0-9]{2,4})/
       );
       const monthDayYearSpelledRegex = new RegExp(
-        /([A-Z][a-z]* [0-9]{2}, [0-9]{4})/
+        /([A-Za-z]*.{0,1} [0-9]{1,2},{0,1} [0-9]{2,4})/
       );
       const isSlashDate = monthDayYearSlashRegex.test(date);
-      const isWordDate = monthDayYearSpelledRegex.test(date);
       if (isSlashDate) {
-        timestamp = DateTime.fromFormat(date, "MM/dd/yyyy").toISODate();
+        const twoDigitYearRegex = new RegExp(
+          /([0-9]{1,2}\/[0-9]{1,2}\/[0-9]{2})/
+        );
+        const isTwoDigitYear = twoDigitYearRegex.test(date);
+        if (isTwoDigitYear) {
+          timestamp = DateTime.fromFormat(date, "M/d/yy").toISODate();
+        } else {
+          timestamp = DateTime.fromFormat(date, "M/d/yyyy").toISODate();
+        }
       }
+      const isWordDate = monthDayYearSpelledRegex.test(date);
       if (isWordDate) {
+        const wordDate = date.replace(",", "").replace(".", "");
         const medWordDateRegex = new RegExp(
-          /([A-Z][a-z]{2} [0-9]{2}, [0-9]{4})/
+          /([A-Za-z]{3} [0-9]{1,2} [0-9]{2,4})/
         );
         const isMedWordDate = medWordDateRegex.test(date);
-        if (isMedWordDate) {
-          timestamp = DateTime.fromFormat(date, "MMM d, yyyy").toISODate();
-        } else {
-          timestamp = DateTime.fromFormat(date, "MMMM d, yyyy").toISODate();
+        const twoDigitYearRegex = new RegExp(/([A-Za-z]* [0-9]{1,2} [0-9]{2})/);
+        const isTwoDigitYear = twoDigitYearRegex.test(wordDate);
+        console.log({ isTwoDigitYear, isMedWordDate });
+        switch (isTwoDigitYear) {
+          case true:
+            if (isMedWordDate) {
+              timestamp = DateTime.fromFormat(wordDate, "MMM d yy").toISODate();
+            } else {
+              timestamp = DateTime.fromFormat(
+                wordDate,
+                "MMMM d yy"
+              ).toISODate();
+            }
+            break;
+          default:
+            if (isMedWordDate) {
+              timestamp = DateTime.fromFormat(
+                wordDate,
+                "MMM d yyyy"
+              ).toISODate();
+              console.log(timestamp);
+            } else {
+              timestamp = DateTime.fromFormat(
+                wordDate,
+                "MMMM d yyyy"
+              ).toISODate();
+            }
         }
       }
       holidays[index].date = timestamp;
