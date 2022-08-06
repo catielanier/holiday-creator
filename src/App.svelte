@@ -10,7 +10,7 @@
     holidays.sort((x, y) => {
       return x.date.localeCompare(y.date);
     });
-    const csv = [["Date", "Reason"]];
+    const csv = [["date", "reason"]];
     const filename = `Holiday Calendar - ${DateTime.now().toFormat(
       "MMM d, yyyy"
     )}`;
